@@ -16,10 +16,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #pragma once
+
+#define CONFIG_EXAMPLES_DIR "Creality/Ender-3 Pro"
 
 /**
  * Configuration_adv.h
@@ -375,7 +377,6 @@
 #if ENABLED(USE_CONTROLLER_FAN)
   //#define CONTROLLER_FAN_PIN -1        // Set a custom pin for the controller fan
   //#define CONTROLLER_FAN_USE_Z_ONLY    // With this option only the Z axis is considered
-  //#define CONTROLLER_FAN_IGNORE_Z      // Ignore Z stepper. Useful when stepper timeout is disabled.
   #define CONTROLLERFAN_SPEED_MIN      0 // (0-255) Minimum speed. (If set below this value the fan is turned off.)
   #define CONTROLLERFAN_SPEED_ACTIVE 255 // (0-255) Active speed, used when any motor is enabled
   #define CONTROLLERFAN_SPEED_IDLE     0 // (0-255) Idle speed, used when motors are disabled
@@ -450,7 +451,7 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1
+#define E0_AUTO_FAN_PIN P2_04
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -634,7 +635,7 @@
 
 //#define HOMING_BACKOFF_POST_MM { 2, 2, 2 }  // (mm) Backoff from endstops after homing
 
-//#define QUICK_HOME                          // If G28 contains XY do a diagonal move first
+#define QUICK_HOME                            // If G28 contains XY do a diagonal move first
 //#define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
 //#define CODEPENDENT_XY_HOMING               // If X/Y can't home without homing Y/X first
 
@@ -646,8 +647,8 @@
    * Do not activate settings that the probe might not understand. Clones might misunderstand
    * advanced commands.
    *
-   * Note: If the probe is not deploying, do a "Reset" and "Self-Test" and then check the
-   *       wiring of the BROWN, RED and ORANGE wires.
+   * Note: If the probe is not deploying, check a "Cmd: Reset" and "Cmd: Self-Test" and then
+   *       check the wiring of the BROWN, RED and ORANGE wires.
    *
    * Note: If the trigger signal of your probe is not being recognized, it has been very often
    *       because the BLACK and WHITE wires needed to be swapped. They are not "interchangeable"
@@ -680,11 +681,11 @@
    * Danger: Don't activate 5V mode unless attached to a 5V-tolerant controller!
    * V3.0 or 3.1: Set default mode to 5V mode at Marlin startup.
    * If disabled, OD mode is the hard-coded default on 3.0
-   * On startup, Marlin will compare its eeprom to this value. If the selected mode
+   * On startup, Marlin will compare its eeprom to this vale. If the selected mode
    * differs, a mode set eeprom write will be completed at initialization.
    * Use the option below to force an eeprom write to a V3.1 probe regardless.
    */
-  //#define BLTOUCH_SET_5V_MODE
+  #define BLTOUCH_SET_5V_MODE
 
   /**
    * Safety: Activate if connecting a probe with an unknown voltage mode.
@@ -836,7 +837,7 @@
 /**
  * XY Frequency limit
  * Reduce resonance by limiting the frequency of small zigzag infill moves.
- * See https://hydraraptor.blogspot.com/2010/12/frequency-limit.html
+ * See http://hydraraptor.blogspot.com/2010/12/frequency-limit.html
  * Use M201 F<freq> G<min%> to change limits at runtime.
  */
 //#define XY_FREQUENCY_LIMIT      10 // (Hz) Maximum frequency of small zigzag infill moves. Set with M201 F<hertz>.
@@ -898,9 +899,6 @@
 //#define CALIBRATION_GCODE
 #if ENABLED(CALIBRATION_GCODE)
 
-  //#define CALIBRATION_SCRIPT_PRE  "M117 Starting Auto-Calibration\nT0\nG28\nG12\nM117 Calibrating..."
-  //#define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration data saved"
-
   #define CALIBRATION_MEASUREMENT_RESOLUTION     0.01 // mm
 
   #define CALIBRATION_FEEDRATE_SLOW             60    // mm/m
@@ -957,7 +955,7 @@
 //#define MICROSTEP16 LOW,LOW,HIGH
 //#define MICROSTEP32 HIGH,LOW,HIGH
 
-// Microstep settings (Requires a board with pins named X_MS1, X_MS2, etc.)
+// Microstep setting (Only functional when stepper driver microstep pins are connected to MCU.
 #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
 
 /**
@@ -1019,7 +1017,7 @@
 // @section lcd
 
 #if EITHER(ULTIPANEL, EXTENSIBLE_UI)
-  #define MANUAL_FEEDRATE { 50*60, 50*60, 4*60, 60 } // Feedrates for manual moves along X, Y, Z, E from panel
+  #define MANUAL_FEEDRATE { 50*60, 50*60, 4*60, 2*60 } // Feedrates for manual moves along X, Y, Z, E from panel
   #define SHORT_MANUAL_Z_MOVE 0.025 // (mm) Smallest manual Z move (< 0.1mm)
   #if ENABLED(ULTIPANEL)
     #define MANUAL_E_MOVES_RELATIVE // Display extruder move distance rather than "position"
@@ -1044,7 +1042,7 @@
 #if HAS_LCD_MENU
 
   // Include a page of printer information in the LCD Main Menu
-  //#define LCD_INFO_MENU
+  #define LCD_INFO_MENU
   #if ENABLED(LCD_INFO_MENU)
     //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of Printer Info pages
   #endif
@@ -1072,7 +1070,7 @@
 #endif // HAS_LCD_MENU
 
 // Scroll a longer status message into view
-//#define STATUS_MESSAGE_SCROLLING
+#define STATUS_MESSAGE_SCROLLING
 
 // On the Info Screen, display XY with one decimal place when possible
 //#define LCD_DECIMAL_SMALL_XY
@@ -1203,7 +1201,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  //#define SCROLL_LONG_FILENAMES
+  #define SCROLL_LONG_FILENAMES
 
   // Leave the heaters on after Stop Print (not recommended!)
   //#define SD_ABORT_NO_COOLDOWN
@@ -1440,7 +1438,6 @@
   //#define AO_EXP2_PINMAP      // AlephObjects CLCD UI EXP2 mapping
   //#define CR10_TFT_PINMAP     // Rudolph Riedel's CR10 pin mapping
   //#define S6_TFT_PINMAP       // FYSETC S6 pin mapping
-  //#define F6_TFT_PINMAP       // FYSETC F6 pin mapping
 
   //#define OTHER_PIN_LAYOUT  // Define pins manually below
   #if ENABLED(OTHER_PIN_LAYOUT)
@@ -1509,10 +1506,9 @@
 #endif
 
 //
-// FSMC / SPI Graphical TFT
+// FSMC Graphical TFT
 //
-#if TFT_SCALED_DOGLCD
-  //#define GRAPHICAL_TFT_ROTATE_180
+#if ENABLED(FSMC_GRAPHICAL_TFT)
   //#define TFT_MARLINUI_COLOR 0xFFFF // White
   //#define TFT_MARLINBG_COLOR 0x0000 // Black
   //#define TFT_DISABLED_COLOR 0x0003 // Almost black
@@ -1553,7 +1549,7 @@
  *
  * Warning: Does not respect endstops!
  */
-//#define BABYSTEPPING
+#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
   //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
   //#define BABYSTEP_WITHOUT_HOMING
@@ -1563,7 +1559,7 @@
   #define BABYSTEP_MULTIPLICATOR_Z  1       // (steps or mm) Steps or millimeter distance for each Z babystep
   #define BABYSTEP_MULTIPLICATOR_XY 1       // (steps or mm) Steps or millimeter distance for each XY babystep
 
-  //#define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
+  #define DOUBLECLICK_FOR_Z_BABYSTEPPING    // Double-click on the Status Screen for Z Babystepping.
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1250   // Maximum interval between clicks, in milliseconds.
                                             // Note: Extra time may be added to mitigate controller latency.
@@ -2214,7 +2210,7 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT       760        // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
     #define X_MICROSTEPS     16    // 0..256
     #define X_RSENSE          0.11
@@ -2230,7 +2226,7 @@
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT       800
+    #define Y_CURRENT       760
     #define Y_CURRENT_HOME  Y_CURRENT
     #define Y_MICROSTEPS     16
     #define Y_RSENSE          0.11
@@ -2246,7 +2242,7 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT       800
+    #define Z_CURRENT       760
     #define Z_CURRENT_HOME  Z_CURRENT
     #define Z_MICROSTEPS     16
     #define Z_RSENSE          0.11
@@ -2278,7 +2274,7 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT      800
+    #define E0_CURRENT      900
     #define E0_MICROSTEPS    16
     #define E0_RSENSE         0.11
     #define E0_CHAIN_POS     -1
@@ -2417,14 +2413,13 @@
    * CHOPPER_DEFAULT_19V
    * CHOPPER_DEFAULT_24V
    * CHOPPER_DEFAULT_36V
-   * CHOPPER_09STEP_24V   // 0.9 degree steppers (24V)
    * CHOPPER_PRUSAMK3_24V // Imported parameters from the official Prusa firmware for MK3 (24V)
    * CHOPPER_MARLIN_119   // Old defaults from Marlin v1.1.9
    *
    * Define you own with
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V
+  #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
 
   /**
    * Monitor Trinamic drivers
@@ -2470,6 +2465,166 @@
   #define E5_HYBRID_THRESHOLD     30
   #define E6_HYBRID_THRESHOLD     30
   #define E7_HYBRID_THRESHOLD     30
+
+  /**
+   * CoolStep. Currently supported for TMC2130, TMC2209, TMC5130 and TMC5160 only.
+   * This mode allows for cooler steppers and energy savings.
+   * The driver will switch to coolStep when stepper speed is over COOLSTEP_THRESHOLD mm/s.
+   *
+   * If SG_RESULT goes below COOLSTEP_LOWER_LOAD_THRESHOLD * 32 stepper current will be increased.
+   * Set to 0 to disable CoolStep.
+   *
+   * If SG_RESULT goes above (COOLSTEP_LOWER_LOAD_THRESHOLD + COOLSTEP_UPPER_LOAD_THRESHOLD + 1) * 32
+   * stepper current will be decreased.
+   *
+   * SEUP sets the increase step width. Value range is 0..3 and computed as 2^SEUP.
+   * SEDN sets the decrease delay. Value range is 0..3, 0 being the slowest.
+   * SEIMIN sets the lower current limit. 0: 1/2 of IRUN, 1:1/4 of IRUN
+   */
+
+  #if AXIS_HAS_COOLSTEP(X)
+    #define X_COOLSTEP_SPEED_THRESHOLD        5
+    #define X_COOLSTEP_LOWER_LOAD_THRESHOLD   0
+    #define X_COOLSTEP_UPPER_LOAD_THRESHOLD   0
+    #define X_COOLSTEP_SEUP                   0
+    #define X_COOLSTEP_SEDN                   0
+    #define X_COOLSTEP_SEIMIN                 0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(X2)
+    #define X2_COOLSTEP_SPEED_THRESHOLD       5
+    #define X2_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define X2_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define X2_COOLSTEP_SEUP                  0
+    #define X2_COOLSTEP_SEDN                  0
+    #define X2_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Y)
+    #define Y_COOLSTEP_SPEED_THRESHOLD        5
+    #define Y_COOLSTEP_LOWER_LOAD_THRESHOLD   0
+    #define Y_COOLSTEP_UPPER_LOAD_THRESHOLD   0
+    #define Y_COOLSTEP_SEUP                   0
+    #define Y_COOLSTEP_SEDN                   0
+    #define Y_COOLSTEP_SEIMIN                 0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Y2)
+    #define Y2_COOLSTEP_SPEED_THRESHOLD       5
+    #define Y2_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define Y2_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define Y2_COOLSTEP_SEUP                  0
+    #define Y2_COOLSTEP_SEDN                  0
+    #define Y2_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Z)
+    #define Z_COOLSTEP_SPEED_THRESHOLD        5
+    #define Z_COOLSTEP_LOWER_LOAD_THRESHOLD   0
+    #define Z_COOLSTEP_UPPER_LOAD_THRESHOLD   0
+    #define Z_COOLSTEP_SEUP                   0
+    #define Z_COOLSTEP_SEDN                   0
+    #define Z_COOLSTEP_SEIMIN                 0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Z2)
+    #define Z2_COOLSTEP_SPEED_THRESHOLD       5
+    #define Z2_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define Z2_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define Z2_COOLSTEP_SEUP                  0
+    #define Z2_COOLSTEP_SEDN                  0
+    #define Z2_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Z3)
+    #define Z3_COOLSTEP_SPEED_THRESHOLD       5
+    #define Z3_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define Z3_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define Z3_COOLSTEP_SEUP                  0
+    #define Z3_COOLSTEP_SEDN                  0
+    #define Z3_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(Z4)
+    #define Z4_COOLSTEP_SPEED_THRESHOLD       5
+    #define Z4_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define Z4_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define Z4_COOLSTEP_SEUP                  0
+    #define Z4_COOLSTEP_SEDN                  0
+    #define Z4_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E0)
+    #define E0_COOLSTEP_SPEED_THRESHOLD       5
+    #define E0_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E0_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E0_COOLSTEP_SEUP                  0
+    #define E0_COOLSTEP_SEDN                  0
+    #define E0_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E1)
+    #define E1_COOLSTEP_SPEED_THRESHOLD       5
+    #define E1_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E1_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E1_COOLSTEP_SEUP                  0
+    #define E1_COOLSTEP_SEDN                  0
+    #define E1_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E2)
+    #define E2_COOLSTEP_SPEED_THRESHOLD       5
+    #define E2_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E2_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E2_COOLSTEP_SEUP                  0
+    #define E2_COOLSTEP_SEDN                  0
+    #define E2_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E3)
+    #define E3_COOLSTEP_SPEED_THRESHOLD       5
+    #define E3_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E3_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E3_COOLSTEP_SEUP                  0
+    #define E3_COOLSTEP_SEDN                  0
+    #define E3_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E4)
+    #define E4_COOLSTEP_SPEED_THRESHOLD       5
+    #define E4_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E4_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E4_COOLSTEP_SEUP                  0
+    #define E4_COOLSTEP_SEDN                  0
+    #define E4_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E5)
+    #define E5_COOLSTEP_SPEED_THRESHOLD       5
+    #define E5_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E5_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E5_COOLSTEP_SEUP                  0
+    #define E5_COOLSTEP_SEDN                  0
+    #define E5_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E6)
+    #define E6_COOLSTEP_SPEED_THRESHOLD       5
+    #define E6_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E6_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E6_COOLSTEP_SEUP                  0
+    #define E6_COOLSTEP_SEDN                  0
+    #define E6_COOLSTEP_SEIMIN                0
+  #endif
+
+  #if AXIS_HAS_COOLSTEP(E7)
+    #define E7_COOLSTEP_SPEED_THRESHOLD       5
+    #define E7_COOLSTEP_LOWER_LOAD_THRESHOLD  0
+    #define E7_COOLSTEP_UPPER_LOAD_THRESHOLD  0
+    #define E7_COOLSTEP_SEUP                  0
+    #define E7_COOLSTEP_SEDN                  0
+    #define E7_COOLSTEP_SEIMIN                0
+  #endif
 
   /**
    * Use StallGuard2 to home / probe X, Y, Z.
@@ -2799,11 +2954,11 @@
   //#define PHOTO_RETRACT_MM   6.5                          // (mm) E retract/recover for the photo move (M240 R S)
 
   // Canon RC-1 or homebrew digital camera trigger
-  // Data from: https://www.doc-diy.net/photo/rc-1_hacked/
+  // Data from: http://www.doc-diy.net/photo/rc-1_hacked/
   //#define PHOTOGRAPH_PIN 23
 
   // Canon Hack Development Kit
-  // https://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+  // http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
   //#define CHDK_PIN        4
 
   // Optional second move with delay to trigger the camera shutter
@@ -3111,8 +3266,6 @@
 //#define M114_REALTIME       // Real current position based on forward kinematics
 //#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
-//#define REPORT_FAN_CHANGE   // Report the new fan speed when changed by M106 (and others)
-
 /**
  * Set the number of proportional font spaces required to fill up a typical character space.
  * This can help to better align the output of commands like `G29 O` Mesh Output.
@@ -3225,11 +3378,11 @@
  * I2C position encoders for closed loop control.
  * Developed by Chris Barr at Aus3D.
  *
- * Wiki: https://wiki.aus3d.com.au/Magnetic_Encoder
+ * Wiki: http://wiki.aus3d.com.au/Magnetic_Encoder
  * Github: https://github.com/Aus3D/MagneticEncoder
  *
- * Supplier: https://aus3d.com.au/magnetic-encoder-module
- * Alternative Supplier: https://reliabuild3d.com/
+ * Supplier: http://aus3d.com.au/magnetic-encoder-module
+ * Alternative Supplier: http://reliabuild3d.com/
  *
  * Reliabuild encoders have been modified to improve reliability.
  */
